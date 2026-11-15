@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flow Monitor</title>
+  <link rel="stylesheet" href="/style.css">
+  <script type="module" src="/dashboard.mjs"></script>
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="/">Flow Monitor</a>
+    <div class="actions">
+      <button id="demo" type="button">Load demo</button>
+      <button id="open-import" class="primary" type="button">Import Zeek logs</button>
+    </div>
+  </header>
+  <main>
+    <div class="heading">
+      <div>
+        <p id="source" class="eyebrow"></p>
+        <h1>Network activity</h1>
+      </div>
+      <div class="control">
+        <label for="threshold">Alert threshold</label>
+        <input id="threshold" type="range" min="30" max="100" value="60">
+        <output id="threshold-value" for="threshold">60</output>
+      </div>
+    </div>
+    <section id="stats" class="stats" aria-label="Window statistics"></section>
+    <section class="panel timeline" aria-labelledby="timeline-title">
+      <div class="panel-heading">
+        <div><h2 id="timeline-title">Observation timeline</h2><p id="split"></p></div>
+        <button id="play" type="button">▶ Play replay</button>
+      </div>
+      <div id="windows" class="windows"></div>
+    </section>
+    <div class="columns">
+      <section class="panel" aria-labelledby="graph-title">
+        <div class="panel-heading"><div><h2 id="graph-title">Host graph</h2><p id="graph-caption"></p></div><span class="legend">Alert path</span></div>
+        <canvas id="graph" width="720" height="365" aria-label="Host connections in selected window"></canvas>
+      </section>
+      <section class="panel alerts" aria-labelledby="alert-title">
+        <div class="panel-heading"><div><h2 id="alert-title">Alerts</h2><p>Per directed host pair · ranked by score</p></div></div>
+        <div id="alerts"></div>
+      </section>
+    </div>
+    <section class="panel evaluation" aria-labelledby="evaluation-title">
+      <div class="panel-heading"><div><h2 id="evaluation-title">Time-split evaluation</h2><p id="evaluation-note"></p></div></div>
+      <div id="metrics"></div>
+    </section>
+  </main>
+  <dialog id="import">
+    <form id="import-form" method="dialog">
+      <button id="close-import" class="close" type="button" aria-label="Close">×</button>
+      <h2>Import Zeek JSON logs</h2>
+      <p>Files are parsed in this browser. Connection and handshake logs must share Zeek UIDs.</p>
+      <label>Connection log <input id="conn" type="file" required></label>
+      <label>TLS log (optional) <input id="ssl" type="file"></label>
+      <label>QUIC log (optional) <input id="quic" type="file"></label>
+      <label>Trusted baseline cutoff in UTC (optional)
+        <input id="cutoff" type="datetime-local">
+      </label>
+      <label>Critical hosts (comma-separated IPs)
+        <input id="critical" type="text" placeholder="10.14.8.10">
+      </label>
+      <p id="import-error" role="alert"></p>
+      <button class="primary" type="submit">Analyze logs</button>
+    </form>
+  </dialog>
+</body>
+</html>
